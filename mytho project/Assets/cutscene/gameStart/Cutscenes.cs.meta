@@ -1,0 +1,13 @@
+fileFormatVersion: 2
+guid: 87ab8492c2043a646895d5613956a640
+MonoImporter:
+  externalObjects: {}
+  serializedVersion: 2
+  defaultReferences:
+  - cutscene1: {instanceID: 0}
+  - cutscene2: {instanceID: 0}
+  executionOrder: 0
+  icon: {instanceID: 0}
+  userData: 
+  assetBundleName: 
+  assetBundleVariant: 
