@@ -7,6 +7,7 @@ public class Cutscenes : MonoBehaviour
     public float fadeSpeed = 0.5f;
     public GameObject Cutscene1;
     public GameObject Cutscene2;
+    public GameObject back;
 
     public Canvas canvas;
     public Text cutsceneTextPrefab; // Reference to a prefab of the Text element
@@ -25,6 +26,7 @@ public class Cutscenes : MonoBehaviour
     private void Start()
     {
         // Instantiate Cutscene1 and get its SpriteRenderer
+	back.SetActive(true);
         if (Cutscene1 != null)
         {
             GameObject instance1 = Instantiate(Cutscene1);
@@ -118,6 +120,7 @@ public class Cutscenes : MonoBehaviour
                 {
                     cutscene2Text.gameObject.SetActive(false); // Deactivate text
                     gameObject.SetActive(false); // Deactivate the script after the second cutscene fades out
+		    back.SetActive(false);
                 }
                 break;
         }

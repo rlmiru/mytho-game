@@ -6,35 +6,49 @@ public class PlayerController : MonoBehaviour
 {
     public GameObject Player1;
     public SpriteRenderer spriteRenderer2;
-
+    public GameObject back;
     public Rigidbody2D rb;
 
     public float moveSpeed = 7f;
     public float forceDamping = 1.2f;
 
-    private Vector2 PlayerInput;
+    private Vector2 playerInput;
     private Vector2 forceToApply;
 
     private void Awake()
     {
+        rb = GetComponent<Rigidbody2D>();
+        rb.interpolation = RigidbodyInterpolation2D.Interpolate;
         forceToApply = Vector2.zero;
     }
 
     private void Update()
     {
-        PlayerInput = new Vector2(Input.GetAxisRaw("Horizontal"), Input.GetAxisRaw("Vertical")).normalized;
+        // Check if 'back' is active; if so, prevent player input
+        if (back.activeSelf)
+        {
+            playerInput = Vector2.zero;
+        }
+        else
+        {
+            playerInput = new Vector2(Input.GetAxisRaw("Horizontal"), Input.GetAxisRaw("Vertical")).normalized;
+        }
     }
 
     private void FixedUpdate()
     {
-        Vector2 targetVelocity = PlayerInput * moveSpeed;
+        Vector2 targetVelocity = playerInput * moveSpeed;
         rb.velocity = targetVelocity + forceToApply;
 
         forceToApply /= forceDamping;
 
-        if (Mathf.Abs(forceToApply.x) <= 0.01f && Mathf.Abs(forceToApply.y) <= 0.01f)
+        if (forceToApply.magnitude <= 0.01f)
         {
             forceToApply = Vector2.zero;
+        }
+        if (playerInput != Vector2.zero)
+        {
+            Move(playerInput);
         }
     }
 
@@ -46,6 +60,11 @@ public class PlayerController : MonoBehaviour
     private void Move(Vector2 dir, float offset)
     {
         Vector2 origin = transform.position;
+
+        if (back.activeSelf) 
+        {
+            return;
+        }
 
         if (dir == Vector2.up)
         {
@@ -64,17 +83,18 @@ public class PlayerController : MonoBehaviour
             offset = 0.125f;
         }
 
-        origin += offset * Vector2.one;
-        RaycastHit2D raycast = Physics2D.Raycast(origin, dir, moveSpeed * Time.deltaTime);
+        origin += offset * dir;
+        RaycastHit2D raycast = Physics2D.Raycast(origin, dir, moveSpeed * Time.fixedDeltaTime);
 
         if (raycast.collider != null && raycast.collider.CompareTag("Collidable"))
         {
-            float distance = Mathf.Abs(raycast.point.y - origin.y);
-            distance = Mathf.Min(distance, Mathf.Abs(raycast.point.x - origin.x));
+            float distance = Mathf.Min(Mathf.Abs(raycast.point.x - origin.x), Mathf.Abs(raycast.point.y - origin.y));
             forceToApply += distance * -dir.normalized * 20f;
         }
     }
 }
+
+
 
 
 //sheidzleba mere gamomadges
