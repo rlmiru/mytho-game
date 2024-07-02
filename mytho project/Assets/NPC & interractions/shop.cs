@@ -6,24 +6,13 @@ public class shop : MonoBehaviour
     public float interactionRange = 1f;
     public KeyCode interactKey = KeyCode.Return;
     public GameObject interactionUI;
-    [TextArea]
-    public string description;
-    public float currency = 0;
-
     private GameObject player;
+    public GameObject inv;
 
     private void Start()
     {
         player = GameObject.FindGameObjectWithTag("Player");
         
-        if (interactionUI != null)
-        {
-            interactionUI.SetActive(false);
-        }
-        else
-        {
-            Debug.LogError("interactionUI is not assigned in the inspector.");
-        }
     }
 
     private void Update()
@@ -32,7 +21,7 @@ public class shop : MonoBehaviour
 
         float distanceToPlayer = Vector2.Distance(transform.position, player.transform.position);
 
-        if (distanceToPlayer <= interactionRange)
+        if (distanceToPlayer <= interactionRange && !inv.activeSelf)
         {
             if (Input.GetKeyDown(interactKey))
             {
@@ -62,11 +51,4 @@ public class shop : MonoBehaviour
         Gizmos.DrawWireSphere(transform.position, interactionRange);
     }
 
-    public void Buy(int cardCost)
-    {
-        if (currency >= cardCost)
-        {
-            currency -= cardCost;
-        }
-    }
 }
